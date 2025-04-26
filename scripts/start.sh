@@ -1,5 +1,8 @@
 #!/bin/bash
-# start.sh
 
-# Copy built Angular files to Nginx's default directory
-sudo cp -r dist/* /var/www/html/
+# Go to frontend folder
+cd /home/ec2-user/fastkart/frontend
+
+# Start SSR server (only if using SSR)
+npm run serve:ssr &
+
