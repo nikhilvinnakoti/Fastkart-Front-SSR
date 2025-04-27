@@ -44,7 +44,7 @@ else
     log "No process found on port $PORT."
 fi
 
-# =========================
+# ========================
 # Try stopping via PM2 (optional)
 # =========================
 log "Attempting to stop SSR server using PM2..."
