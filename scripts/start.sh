@@ -4,5 +4,5 @@
 cd /home/ec2-user/fastkart/frontend
 
 # Start SSR server (only if using SSR)
-npm run serve:ssr &
+npm run serve:ssr 
 
