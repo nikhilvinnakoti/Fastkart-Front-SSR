@@ -49,15 +49,16 @@ export class LoginComponent {
     this.form.markAllAsTouched();
     if(this.form.valid) {
       this.store.dispatch(new Login(this.form.value)).subscribe({
-        complete: () => {
-          // Navigate to the intended URL after successful login
-          const redirectUrl = this.authService.redirectUrl || '/account/dashboard';
-          this.router.navigateByUrl(redirectUrl);
-
-          // Clear the stored redirect URL
-          this.authService.redirectUrl = undefined;
+        next: (response) => {
+          // Dispatch the GetUserDetails action with the user ID once login is successful
+          console.log("respinse", response)
+        },
+        error: (err) => {
+          // Handle any errors, e.g., dispatch failure action
+          console.log(err)
         }
       });
+
     }
   }
 

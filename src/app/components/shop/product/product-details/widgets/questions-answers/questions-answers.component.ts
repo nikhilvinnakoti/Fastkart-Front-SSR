@@ -13,6 +13,7 @@ import { Feedback } from '../../../../../../shared/action/questions-answers.acti
 import { TranslateModule } from '@ngx-translate/core';
 import { NoDataComponent } from '../../../../../../shared/components/widgets/no-data/no-data.component';
 import { AsyncPipe } from '@angular/common';
+import { AuthState } from 'src/app/shared/state/auth.state';
 
 @Component({
     selector: 'app-questions-answers',
@@ -35,12 +36,15 @@ export class QuestionsAnswersComponent {
   @ViewChild("questionModal") QuestionModal: QuestionModalComponent;
 
   user$: Observable<AccountUser> = inject(Store).select(AccountState.user) as Observable<AccountUser>;
+   userId$  = inject(Store).select(AuthState._id);
 
   constructor(private store: Store, public questionAnswersService: QuestionsAnswersService){
-    this.isLogin = !!this.store.selectSnapshot(state => state.auth && state.auth.access_token)
-    if(this.isLogin){
-      this.store.dispatch(new GetUserDetails());
-    }
+    // this.isLogin = !!this.store.selectSnapshot(state => state.auth && state.auth.access_token)
+    // if(this.isLogin){
+    //   this.userId$.subscribe(userId => {
+    //     this.store.dispatch(new GetUserDetails(userId));
+    //   });
+    // }
   }
 
   feedback(qna: QuestionAnswers, value: string) {

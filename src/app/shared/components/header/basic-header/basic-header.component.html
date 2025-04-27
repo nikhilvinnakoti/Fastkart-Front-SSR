@@ -12,9 +12,9 @@
             </div>
             <app-logo [textClass]="'txt-theme f-w-600'" [data]="data" [logo]="logo"></app-logo>
             <div class="middle-box">
-              <div class="location-box">
+              <!-- <div class="location-box">
                 <app-categories [style]="'input_dropdown'"></app-categories>
-              </div>
+              </div> -->
               <div class="search-box">
                 <app-search></app-search>
               </div>
@@ -24,11 +24,11 @@
                 <li class="right-side">
                   <app-search-box></app-search-box>
                 </li>
-                @if (data?.header?.support_number) {
+                <!-- @if (data?.header?.support_number) {
                   <li class="right-side">
                     <app-call [data]="data"></app-call>
                   </li>
-                }
+                } -->
                 <li class="right-side">
                   <app-header-wishlist></app-header-wishlist>
                 </li>
@@ -54,7 +54,7 @@
           <div class="header-nav-left">
             <app-header-categories [data]="data"></app-header-categories>
           </div>
-          <div class="header-nav-middle">
+          <!-- <div class="header-nav-middle">
             <div class="main-nav navbar navbar-expand-xl navbar-light navbar-sticky">
               <div class="offcanvas offcanvas-collapse order-xl-2" [class.show]="active">
                 <div class="offcanvas-header navbar-shadow">
@@ -71,7 +71,7 @@
                 <div class="offcanvas-backdrop fade" [class.show]="active" (click)="toggle(false)"></div>
               }
             </div>
-          </div>
+          </div> -->
           @if (data?.header?.today_deals?.length) {
             <div class="header-nav-right">
               <app-deal [data]="data"></app-deal>

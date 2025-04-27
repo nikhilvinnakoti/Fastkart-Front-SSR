@@ -1,38 +1,183 @@
+// import { Injectable } from "@angular/core";
+// import { Router } from "@angular/router";
+// import { Store, Action, Selector, State, StateContext } from "@ngxs/store";
+// import { tap } from "rxjs";
+// import { GetOrders, ViewOrder, Checkout, PlaceOrder, Clear, VerifyPayment, RePayment } from "../action/order.action";
+// import { Order, OrderCheckout } from "../interface/order.interface";
+// import { OrderService } from "../services/order.service";
+// import { ClearCart } from "../action/cart.action";
+
+// export class OrderStateModel {
+//   order = {
+//     data: [] as Order[],
+//     total: 0
+//   }
+//   selectedOrder: Order | null
+//   checkout: OrderCheckout | null
+// }
+
+// @State<OrderStateModel>({
+//   name: "order",
+//   defaults: {
+//     order: {
+//       data: [],
+//       total: 0
+//     },
+//     selectedOrder: null,
+//     checkout: null
+//   },
+// })
+// @Injectable()
+// export class OrderState {
+
+//   constructor(private store: Store,
+//     private router: Router,
+//     private orderService: OrderService) {}
+
+//   @Selector()
+//   static order(state: OrderStateModel) {
+//     return state.order;
+//   }
+
+//   @Selector()
+//   static selectedOrder(state: OrderStateModel) {
+//     return state.selectedOrder;
+//   }
+
+//   @Selector()
+//   static checkout(state: OrderStateModel) {
+//     return state.checkout;
+//   }
+
+//   @Action(GetOrders)
+//   getOrders(ctx: StateContext<OrderStateModel>, action: GetOrders) {
+//     return this.orderService.getOrders(action?.payload).pipe(
+//       tap({
+//         next: result => {
+//           ctx.patchState({
+//             order: {
+//               data: result.data,
+//               total: result?.total ? result?.total : result.data ? result.data.length : 0
+//             }
+//           });
+//         },
+//         error: err => {
+//           throw new Error(err?.error?.message);
+//         }
+//       })
+//     );
+//   }
+
+//   @Action(ViewOrder)
+//   viewOrder(ctx: StateContext<OrderStateModel>, { id }: ViewOrder) {
+//     this.orderService.skeletonLoader = true;
+//     return this.orderService.getOrders().pipe(
+//       tap({
+//         next: result => {
+//           const state = ctx.getState();
+//           const order = result.data.find(order => order.order_number == id);
+
+//           ctx.patchState({
+//             ...state,
+//             selectedOrder: order
+//           });
+//         },
+//         error: err => {
+//           throw new Error(err?.error?.message);
+//         },
+//         complete: () => {
+//           this.orderService.skeletonLoader = false;
+//         }
+//       })
+//     );
+//   }
+
+//   @Action(Checkout)
+//   checkout(ctx: StateContext<OrderStateModel>, action: Checkout) {
+
+//     const state = ctx.getState();
+
+//     // It Just Static Values as per cart default value (When you are using api then you need calculate as per your requirement)
+//     const order = {
+//       total : {
+//         convert_point_amount: -10,
+//         convert_wallet_balance: -84.4,
+//         coupon_total_discount: 10,
+//         points: 300,
+//         points_amount: 10,
+//         shipping_total: 0,
+//         sub_total: 35.19,
+//         tax_total: 2.54,
+//         total: 37.73,
+//         wallet_balance: 84.4,
+//       }
+//     }
+
+//     ctx.patchState({
+//       ...state,
+//       checkout: order
+//     });
+    
+//   }
+
+//   @Action(PlaceOrder)
+//   placeOrder(ctx: StateContext<OrderStateModel>, action: PlaceOrder) {
+//     this.router.navigateByUrl(`/account/order/details/1000`);
+//   }
+
+//   @Action(RePayment)
+//   verifyPayment(ctx: StateContext<OrderStateModel>, action: RePayment) {
+//     // Verify Payment Logic Here
+//   }
+
+//   @Action(VerifyPayment)
+//   rePayment(ctx: StateContext<OrderStateModel>, action: VerifyPayment) {
+//     // Re Payment Logic Here
+//   }
+
+//   @Action(Clear)
+//   clear(ctx: StateContext<OrderStateModel>) {
+//     const state = ctx.getState();
+//     ctx.patchState({
+//       ...state,
+//       checkout: null
+//     });
+//   }
+
+// }
 import { Injectable } from "@angular/core";
 import { Router } from "@angular/router";
 import { Store, Action, Selector, State, StateContext } from "@ngxs/store";
 import { tap } from "rxjs";
-import { GetOrders, ViewOrder, Checkout, PlaceOrder, Clear, VerifyPayment, RePayment } from "../action/order.action";
+import {
+  GetOrders, ViewOrder, Checkout, PlaceOrder,
+  Clear, VerifyPayment, RePayment
+} from "../action/order.action";
 import { Order, OrderCheckout } from "../interface/order.interface";
 import { OrderService } from "../services/order.service";
 import { ClearCart } from "../action/cart.action";
 
 export class OrderStateModel {
-  order = {
-    data: [] as Order[],
-    total: 0
-  }
-  selectedOrder: Order | null
-  checkout: OrderCheckout | null
+  order = { data: [] as Order[], total: 0 };
+  selectedOrder: Order | null;
+  checkout: OrderCheckout | null;
 }
 
 @State<OrderStateModel>({
   name: "order",
   defaults: {
-    order: {
-      data: [],
-      total: 0
-    },
+    order: { data: [], total: 0 },
     selectedOrder: null,
     checkout: null
   },
 })
 @Injectable()
 export class OrderState {
-
-  constructor(private store: Store,
+  constructor(
+    private store: Store,
     private router: Router,
-    private orderService: OrderService) {}
+    private orderService: OrderService
+  ) {}
 
   @Selector()
   static order(state: OrderStateModel) {
@@ -51,19 +196,15 @@ export class OrderState {
 
   @Action(GetOrders)
   getOrders(ctx: StateContext<OrderStateModel>, action: GetOrders) {
-    return this.orderService.getOrders(action?.payload).pipe(
-      tap({
-        next: result => {
-          ctx.patchState({
-            order: {
-              data: result.data,
-              total: result?.total ? result?.total : result.data ? result.data.length : 0
-            }
-          });
-        },
-        error: err => {
-          throw new Error(err?.error?.message);
-        }
+    return this.orderService.getOrders(action.payload).pipe(
+      tap(result => {
+        ctx.patchState({
+          order: {
+            data: result.data,
+            total: result.total || result.data?.length || 0
+          }
+        });
+        
       })
     );
   }
@@ -71,19 +212,11 @@ export class OrderState {
   @Action(ViewOrder)
   viewOrder(ctx: StateContext<OrderStateModel>, { id }: ViewOrder) {
     this.orderService.skeletonLoader = true;
-    return this.orderService.getOrders().pipe(
+    return this.orderService.getOrders({}).pipe(
       tap({
         next: result => {
-          const state = ctx.getState();
           const order = result.data.find(order => order.order_number == id);
-
-          ctx.patchState({
-            ...state,
-            selectedOrder: order
-          });
-        },
-        error: err => {
-          throw new Error(err?.error?.message);
+          ctx.patchState({ selectedOrder: order });
         },
         complete: () => {
           this.orderService.skeletonLoader = false;
@@ -94,54 +227,51 @@ export class OrderState {
 
   @Action(Checkout)
   checkout(ctx: StateContext<OrderStateModel>, action: Checkout) {
-
-    const state = ctx.getState();
-
-    // It Just Static Values as per cart default value (When you are using api then you need calculate as per your requirement)
-    const order = {
-      total : {
-        convert_point_amount: -10,
-        convert_wallet_balance: -84.4,
-        coupon_total_discount: 10,
-        points: 300,
-        points_amount: 10,
-        shipping_total: 0,
-        sub_total: 35.19,
-        tax_total: 2.54,
-        total: 37.73,
-        wallet_balance: 84.4,
-      }
-    }
-
-    ctx.patchState({
-      ...state,
-      checkout: order
-    });
-    
+    return this.orderService.checkout(action.payload).pipe(
+      tap(result => {
+        console.log("checkout", result)
+        ctx.patchState({ checkout: result });
+      })
+    );
   }
 
-  @Action(PlaceOrder)
-  placeOrder(ctx: StateContext<OrderStateModel>, action: PlaceOrder) {
-    this.router.navigateByUrl(`/account/order/details/1000`);
-  }
+  // @Action(PlaceOrder)
+  // placeOrder(ctx: StateContext<OrderStateModel>, action: PlaceOrder) {
+  //   return this.orderService.placeOrder(action.payload).pipe(
+  //     tap(result => {
+  //       this.store.dispatch(new ClearCart());
+  //       if (result?.url) {
+  //         window.location.href = result.url;
+  //       } else {
+  //         this.router.navigateByUrl(`/account/order/details/${result.order_number}`);
+  //       }
+  //     })
+  //   );
+  // }
 
-  @Action(RePayment)
-  verifyPayment(ctx: StateContext<OrderStateModel>, action: RePayment) {
-    // Verify Payment Logic Here
-  }
+  // @Action(RePayment)
+  // rePayment(ctx: StateContext<OrderStateModel>, action: RePayment) {
+  //   return this.orderService.rePayment(action.payload).pipe(
+  //     tap(result => {
+  //       if (result?.url) {
+  //         window.location.href = result.url;
+  //       }
+  //     })
+  //   );
+  // }
 
-  @Action(VerifyPayment)
-  rePayment(ctx: StateContext<OrderStateModel>, action: VerifyPayment) {
-    // Re Payment Logic Here
-  }
+  // @Action(VerifyPayment)
+  // verifyPayment(ctx: StateContext<OrderStateModel>, action: VerifyPayment) {
+  //   return this.orderService.verifyPayment(action.payload).pipe(
+  //     tap(result => {
+  //       // handle result
+  //     })
+  //   );
+  // }
 
-  @Action(Clear)
-  clear(ctx: StateContext<OrderStateModel>) {
-    const state = ctx.getState();
-    ctx.patchState({
-      ...state,
-      checkout: null
-    });
-  }
-
+  // @Action(Clear)
+  // clear(ctx: StateContext<OrderStateModel>) {
+  //   ctx.patchState({ checkout: null });
+  // }
 }
+

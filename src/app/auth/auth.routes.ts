@@ -4,11 +4,12 @@ import { LoginComponent } from "./login/login.component";
 import { OtpComponent } from "./otp/otp.component";
 import { RegisterComponent } from "./register/register.component";
 import { UpdatePasswordComponent } from "./update-password/update-password.component";
-
+import { AuthGuard } from "src/app/core/guard/auth.guard";
 export default [
   {
     path: "login",
     component: LoginComponent,
+    
   },
   {
     path: "forgot-password",
@@ -25,5 +26,6 @@ export default [
   {
     path: "register",
     component: RegisterComponent,
+    
   }
 ] as Routes;

@@ -25,3 +25,8 @@ export interface Category {
     updated_at?: string;
     deleted_at?: string;
 }
+
+export interface CategoryResponse {
+    data: Category[];
+    total: number;
+  }

@@ -10,6 +10,7 @@ import { ButtonComponent } from '../../../shared/components/widgets/button/butto
 
 import { AlertComponent } from '../../../shared/components/widgets/alert/alert.component';
 import { BreadcrumbComponent } from '../../../shared/components/widgets/breadcrumb/breadcrumb.component';
+import { GetUserDetails } from 'src/app/shared/action/account.action';
 
 @Component({
     selector: 'app-login',
@@ -49,13 +50,14 @@ export class LoginComponent {
     this.form.markAllAsTouched();
     if(this.form.valid) {
       this.store.dispatch(new Login(this.form.value)).subscribe({
-        complete: () => {
-          // Navigate to the intended URL after successful login
-          const redirectUrl = this.authService.redirectUrl || '/account/dashboard';
-          this.router.navigateByUrl(redirectUrl);
-
-          // Clear the stored redirect URL
-          this.authService.redirectUrl = undefined;
+        next: (response : any) => {
+          // Dispatch the GetUserDetails action with the user ID once login is successful
+          const userId = response?.auth?._id; // Assuming the response contains the userId
+          this.store.dispatch(new GetUserDetails(userId));
+        },
+        error: (err) => {
+          // Handle any errors, e.g., dispatch failure action
+          
         }
       });
     }

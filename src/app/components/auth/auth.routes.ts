@@ -26,5 +26,6 @@ export default[
   {
     path: "register",
     component: RegisterComponent,
+    
   }
 ] as Routes;

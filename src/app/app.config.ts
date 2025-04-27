@@ -129,7 +129,8 @@ export const appConfig: ApplicationConfig = {
           'theme',
           'theme_option',
           'setting',
-          'notification'
+          'notification',
+          'order'
         ]
       }),
       NgxsModule.forFeature([AuthState])

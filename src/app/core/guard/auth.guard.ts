@@ -1,46 +1,74 @@
-import { Injectable, } from '@angular/core';
-import { Store } from '@ngxs/store';
-import { UrlTree, Router, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
-import { Observable } from 'rxjs';
-import { GetUserDetails } from './../../shared/action/account.action';
-import { AuthService } from './../../shared/services/auth.service';
+import { inject, Injectable } from "@angular/core";
+import { Store } from "@ngxs/store";
+import {
+  UrlTree,
+  Router,
+  ActivatedRouteSnapshot,
+  RouterStateSnapshot,
+} from "@angular/router";
+import { Observable, of, switchMap, take } from "rxjs";
+import { GetUserDetails } from "./../../shared/action/account.action";
+import { AuthService } from "./../../shared/services/auth.service";
+import { AuthState } from "src/app/shared/state/auth.state";
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root",
 })
 export class AuthGuard {
-
-  constructor(private store: Store,
+  constructor(
+    private store: Store,
     private router: Router,
-    private authService: AuthService) {}
+    private authService: AuthService
+  ) {}
 
-  canActivate(route: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
+  canActivate(
+    route: ActivatedRouteSnapshot,
+    state: RouterStateSnapshot
+  ): Observable<boolean | UrlTree> | boolean | UrlTree {
+    console.log("Attempted URL:", state.url); // Debugging log
 
-    // Store the attempted URL for redirecting after login
-    this.authService.redirectUrl = state.url;
-
-    // Redirect to the login page
-    if(!this.store.selectSnapshot(state => state.auth && state.auth.access_token)) {
-      return this.router.createUrlTree(['/auth/login']);
+    // Check if the user is authenticated
+    const accessToken = this.store.selectSnapshot(
+      (state) => state.auth && state.auth.access_token
+    );
+    if (!accessToken) {
+      this.authService.redirectUrl = state.url; // Store attempted URL for future redirection
+      return this.router.createUrlTree(["/auth/login"]);
     }
 
-    this.store.dispatch(new GetUserDetails()).subscribe({
-      complete: () => {
-        return true
-      }
-    });
-    return true
+    // Get userId from state synchronously
+    const userId = this.store.selectSnapshot(AuthState._id);
+
+    if (!userId) {
+      return true; // If userId doesn't exist or userDetails already present, skip API call
+    }
+
+    // Dispatch GetUserDetails only if user details are not already available
+    return this.store.dispatch(new GetUserDetails(userId)).pipe(
+      take(1),
+      switchMap(() => {
+        return of(true);
+      })
+    );
   }
 
-  canActivateChild(route: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot): boolean | UrlTree {
-    if (!!this.store.selectSnapshot(state => state.auth && state.auth.access_token)) {
-      if(this.router.url.startsWith('/account') || this.router.url == '/checkout' || this.router.url == '/compare')
-        this.router.navigate(['/theme/paris']);
+  canActivateChild(
+    route: ActivatedRouteSnapshot,
+    state: RouterStateSnapshot
+  ): boolean | UrlTree {
+    const accessToken = this.store.selectSnapshot(
+      (state) => state.auth && state.auth.access_token
+    );
+    if (accessToken) {
+      if (
+        this.router.url.startsWith("/account") ||
+        this.router.url === "/checkout" ||
+        this.router.url === "/compare"
+      ) {
+        this.router.navigate(["/theme/paris"]);
+      }
       return false;
     }
     return true;
   }
-
 }

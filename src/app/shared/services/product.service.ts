@@ -11,11 +11,13 @@ import { Params } from '../interface/core.interface';
 export class ProductService {
 
   public skeletonLoader: boolean = false;
+  private _backendUrl = "http://localhost:3000/fastkart"
+
 
   constructor(private http: HttpClient) {}
 
-  getProducts(payload?: Params): Observable<ProductModel> {
-    return this.http.get<ProductModel>(`${environment.URL}/product.json`, { params: payload });
+  getProducts(): Observable<ProductModel> {
+    return this.http.get<ProductModel>(`${this._backendUrl}/products`, { withCredentials: true });
   }
 
 }

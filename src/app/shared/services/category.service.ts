@@ -4,16 +4,17 @@ import { Observable } from "rxjs";
 import { environment } from "../../../../public/environments/environment";
 import { Params } from "../interface/core.interface";
 import { CategoryModel } from "../interface/category.interface";
-
+import { CategoryResponse } from "../interface/category.interface";
 @Injectable({
   providedIn: "root",
 })
 export class CategoryService {
+   private _backendUrl = "http://localhost:3000/fastkart"
 
   constructor(private http: HttpClient) {}
 
-  getCategories(payload?: Params): Observable<CategoryModel> {
-    return this.http.get<CategoryModel>(`${environment.URL}/category.json`, { params: payload });
+  getCategories(){
+    return this.http.get<CategoryResponse>(`${this._backendUrl}/categories`, {withCredentials: true });
   }
   
 }

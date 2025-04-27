@@ -39,3 +39,8 @@ export class AuthClear {
   static readonly type = "[Auth] Clear";
 }
 
+export class RefreshToken {
+  static readonly type = "[Auth] Refresh Token";
+  constructor(public accessToken: string) {}
+}
+

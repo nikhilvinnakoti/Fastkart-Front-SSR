@@ -12,9 +12,9 @@
       </app-button>
     </div>
   </div>
-  @if ((user$ | async)?.address?.length) {
+  @if ((user$ | async)?.addresses?.length) {
     <div class="row g-sm-4 g-3">
-      @for (address of (user$ | async)?.address; track address; let i = $index) {
+      @for (address of (user$ | async)?.addresses; track address; let i = $index) {
         <div class="col-xxl-4 col-xl-6 col-lg-12 col-md-6">
           <div class="address-box">
             <div>
@@ -72,7 +72,7 @@
     </div>
   }
 </div>
-@if (!(user$ | async)?.address?.length) {
+@if (!(user$ | async)?.addresses?.length) {
   <app-no-data [class]="'no-data-added'"
     [image]="'assets/svg/empty-items.svg'"
     [text]="'No Address Found'"

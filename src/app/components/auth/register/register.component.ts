@@ -16,6 +16,7 @@ import { isPlatformBrowser } from '@angular/common';
 import { AuthState } from 'src/app/shared/state/auth.state';
 import { RegisterModal } from 'src/app/shared/interface/auth.interface';
 import { Observable } from 'rxjs';
+import { GetUserDetails } from 'src/app/shared/action/account.action';
 @Component({
     selector: 'app-register',
     templateUrl: './register.component.html',
@@ -58,7 +59,7 @@ export class RegisterComponent {
     );
   }
   
-  registeredUserEmail$:Observable<RegisterModal["email"]>  = inject(Store).select(AuthState.email);
+  // registeredUserEmail$:Observable<RegisterModal["email"]>  = inject(Store).select(AuthState.email);
 
   submit() {
     this.form.markAllAsTouched();
@@ -66,10 +67,17 @@ export class RegisterComponent {
       return
     }
     if(this.form.valid) {
-      this.store.dispatch(new Register(this.form.value));
-      this.registeredUserEmail$?.subscribe((email)=>{
-        console.log("hello", email)
-      })
-    }
+          this.store.dispatch(new Register(this.form.value)).subscribe({
+            next: (response : any) => {
+              // Dispatch the GetUserDetails action with the user ID once login is successful
+              const userId = response?.auth?._id; // Assuming the response contains the userId
+              this.store.dispatch(new GetUserDetails(userId));
+            },
+            error: (err) => {
+              // Handle any errors, e.g., dispatch failure action
+              
+            }
+          });
+        }
   }
 }

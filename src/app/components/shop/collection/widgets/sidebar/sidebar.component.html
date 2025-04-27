@@ -9,14 +9,14 @@
     </h3>
   </div>
   <ng-content></ng-content>
-  <div class="filter-category">
+  <!-- <div class="filter-category">
     <app-collection-filter [filter]="filter"></app-collection-filter>
-  </div>
+  </div> -->
   @if (attributeService.skeletonLoader) {
     <app-skeleton-collection-sidebar></app-skeleton-collection-sidebar>
   } @else {
     <div class="accordion custome-accordion" ngbAccordion>
-      <div class="accordion-item" ngbAccordionItem [collapsed]="false">
+      <!-- <div class="accordion-item" ngbAccordionItem [collapsed]="false">
         <h2 class="accordion-header" ngbAccordionHeader>
           <button class="accordion-button" type="button" ngbAccordionButton>
             <span>{{ 'categories' | translate }}</span>
@@ -27,7 +27,7 @@
             <app-collection-category-filter [filter]="filter"></app-collection-category-filter>
           </div>
         </div>
-      </div>
+      </div> -->
       @if (!filter['store_slug']) {
         @for (attribute of (attribute$ | async)?.data; track attribute) {
           @if (attribute.style !== 'image') {

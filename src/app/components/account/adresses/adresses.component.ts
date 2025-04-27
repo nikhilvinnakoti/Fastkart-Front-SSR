@@ -32,7 +32,8 @@ export class AdressesComponent {
 
   delete(action: string, data: UserAddress) {
     if(action == 'delete')
-      this.store.dispatch(new DeleteAddress(data.id));
+      
+      this.store.dispatch(new DeleteAddress((data as any)._id));
   }
 
 }

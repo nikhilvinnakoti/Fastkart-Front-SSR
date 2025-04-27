@@ -21,6 +21,7 @@ import { RouterOutlet } from '@angular/router';
 import { HeaderComponent } from '../shared/components/header/header.component';
 import { LoaderComponent } from '../shared/components/widgets/loader/loader.component';
 import { LoadingBarModule } from '@ngx-loading-bar/core';
+import { AuthState } from '../shared/state/auth.state';
 
 @Component({
     selector: 'app-layout',
@@ -38,6 +39,7 @@ export class LayoutComponent {
   themeOption$: Observable<Option> = inject(Store).select(ThemeOptionState.themeOptions) as Observable<Option>;
   cookies$: Observable<boolean> = inject(Store).select(ThemeOptionState.cookies);
   exit$: Observable<boolean> = inject(Store).select(ThemeOptionState.exit);
+  userId$  = inject(Store).select(AuthState._id);
 
   public cookies: boolean;
   public exit: boolean;
@@ -51,7 +53,14 @@ export class LayoutComponent {
     this.cookies$.subscribe(res => this.cookies = res);
     this.exit$.subscribe(res => this.exit = res);
     this.themeOptionService.preloader = true;
-    this.store.dispatch(new GetUserDetails());
+    // this.userId$.subscribe(userId => {
+    //   if (!userId || isNaN(Number(userId))) {
+        
+    //     return;
+    //   }
+  
+    //   this.store.dispatch(new GetUserDetails(userId));
+    // });
     const getCategories$ = this.store.dispatch(new GetCategories({ status: 1 }));
     const getBlog$ = this.store.dispatch(new GetBlogs({ status: 1, paginate: 10 }));
     const getProduct$ = this.store.dispatch(new GetDealProducts({ status: 1, paginate: 2 }));

@@ -11,6 +11,56 @@ export class CountryStateModel {
   }
 }
 
+// @State<CountryStateModel>({
+//   name: "country",
+//   defaults: {
+//     country: {
+//       data: []
+//     }
+//   },
+// })
+// @Injectable()
+// export class CountryState {
+  
+//   constructor(private countryService: CountryService) {}
+
+//   @Selector()
+//   static country(state: CountryStateModel) {
+//     return state.country;
+//   }
+
+//   @Selector()
+//   static countries(state: CountryStateModel) {
+//     return state?.country?.data?.map(cn => {
+//       return { label: cn?.name, value: cn?.id }
+//     });
+//   }
+
+//   @Action(GetCountries)
+//   getCountries(ctx: StateContext<CountryStateModel>, action: GetCountries) {
+//     const state = ctx.getState();
+//     if (state?.country?.data?.length) {
+//       // If the country has been already loaded
+//       // we just break the execution
+//       return true;
+//     }
+//     return this.countryService.getCountries().pipe(
+//       tap({
+//         next: result => { 
+//           ctx.patchState({
+//             country: {
+//               data: result
+//             }
+//           });
+//         },
+//         error: err => { 
+//           throw new Error(err?.error?.message);
+//         }
+//       })
+//     );
+//   }
+
+// }
 @State<CountryStateModel>({
   name: "country",
   defaults: {
@@ -21,7 +71,6 @@ export class CountryStateModel {
 })
 @Injectable()
 export class CountryState {
-  
   constructor(private countryService: CountryService) {}
 
   @Selector()
@@ -31,33 +80,37 @@ export class CountryState {
 
   @Selector()
   static countries(state: CountryStateModel) {
-    return state?.country?.data?.map(cn => {
-      return { label: cn?.name, value: cn?.id }
-    });
+    return state?.country?.data?.map(cn => ({
+      label: cn?.name,
+      value: cn?.id
+    }));
+  }
+
+  @Selector()
+  static countriesRaw(state: CountryStateModel): Country[] {
+    return state.country.data;
   }
 
   @Action(GetCountries)
   getCountries(ctx: StateContext<CountryStateModel>, action: GetCountries) {
     const state = ctx.getState();
     if (state?.country?.data?.length) {
-      // If the country has been already loaded
-      // we just break the execution
       return true;
     }
     return this.countryService.getCountries().pipe(
       tap({
-        next: result => { 
+        next: result => {
           ctx.patchState({
             country: {
               data: result
             }
           });
         },
-        error: err => { 
+        error: err => {
           throw new Error(err?.error?.message);
         }
       })
     );
   }
-
 }
+

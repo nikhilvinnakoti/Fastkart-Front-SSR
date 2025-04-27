@@ -33,15 +33,17 @@ export class CategoryState {
 
   @Action(GetCategories)
   getCategories(ctx: StateContext<CategoryStateModel>, action: any) {
-    return this.categoryService.getCategories(action.payload).pipe(
+    return this.categoryService.getCategories().pipe(
       tap({
+        
         next: result => { 
           ctx.patchState({
             category: {
-              data: result.data,
+              data: result?.data,
               total: result?.total ? result?.total : result?.data?.length
             }
           });
+          
         },
         error: err => { 
           throw new Error(err?.error?.message);

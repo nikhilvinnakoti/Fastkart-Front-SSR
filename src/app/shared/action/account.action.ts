@@ -3,7 +3,7 @@ import { AccountUser, AccountUserUpdatePassword } from "./../interface/account.i
 
 export class GetUserDetails {
   static readonly type = "[Account] User Get";
-  constructor() {}
+  constructor(public userId: String | null) {}
 }
 
 export class UpdateUserProfile {
@@ -23,12 +23,12 @@ export class CreateAddress {
 
 export class UpdateAddress {
   static readonly type = "[Account] Address Edit";
-  constructor(public payload: UserAddress, public id: number) {}
+  constructor(public payload: UserAddress,  public _id: string) {}
 }
 
 export class DeleteAddress {
   static readonly type = "[Account] Address Delete";
-  constructor(public id: number) {}
+  constructor(public id: string) {}
 }
 
 export class AccountClear {

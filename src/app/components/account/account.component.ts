@@ -11,6 +11,8 @@ import { LoaderComponent } from '../../shared/components/widgets/loader/loader.c
 import { AsyncPipe } from '@angular/common';
 import { SidebarComponent } from './sidebar/sidebar.component';
 import { BreadcrumbComponent } from '../../shared/components/widgets/breadcrumb/breadcrumb.component';
+import { AuthState } from 'src/app/shared/state/auth.state';
+import { GetUserDetails } from 'src/app/shared/action/account.action';
 
 @Component({
     selector: 'app-account',
@@ -22,6 +24,8 @@ import { BreadcrumbComponent } from '../../shared/components/widgets/breadcrumb/
 export class AccountComponent {
 
   loadingStatus$: Observable<boolean> = inject(Store).select(LoaderState.status) as Observable<boolean>;
+    userId$  = inject(Store).select(AuthState._id);
+    public isLogin: boolean = false;
 
   public open: boolean = false;
   public breadcrumb: Breadcrumb = {
@@ -30,8 +34,17 @@ export class AccountComponent {
   };
 
   constructor(private store: Store) {
+    // this.isLogin = !!this.store.selectSnapshot(state => state.auth && state.auth.access_token)
+    //   if(this.isLogin){
+    //     this.userId$.subscribe(userId => {
+    //       this.store.dispatch(new GetUserDetails(userId));
+    //     });
+    //   }
     this.store.dispatch(new GetNotification());
   }
+  // ngOnInit() {
+      
+  //   }
 
   openMenu(value: any){
     this.open = value;

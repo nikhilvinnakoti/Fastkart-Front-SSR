@@ -1,15 +1,23 @@
 import { Injectable } from "@angular/core";
 import { Store, State, Selector, Action, StateContext } from "@ngxs/store";
-import { Router } from '@angular/router';
+import { Router } from "@angular/router";
 import { AccountClear, GetUserDetails } from "../action/account.action";
-import { Register, Login, ForgotPassWord, VerifyEmailOtp, UpdatePassword, Logout, AuthClear } from "../action/auth.action";
+import {
+  Register,
+  Login,
+  ForgotPassWord,
+  VerifyEmailOtp,
+  UpdatePassword,
+  Logout,
+  AuthClear,
+  RefreshToken,
+} from "../action/auth.action";
 import { NotificationService } from "../services/notification.service";
 import { AuthService } from "../services/auth.service";
 import { tap } from "rxjs";
 
-
 export interface AuthStateModel {
-  email: string;
+  _id: String;
   token: String | Number;
   access_token: String | null;
 }
@@ -17,17 +25,19 @@ export interface AuthStateModel {
 @State<AuthStateModel>({
   name: "auth",
   defaults: {
-    email: '',
-    token: '',
-    access_token: ''
+    _id:"",  
+    token: "",
+    access_token: ""
   },
 })
 @Injectable()
 export class AuthState {
-
-  constructor(private store: Store, public router: Router,
-    private notificationService: NotificationService, private authService: AuthService) {}
-
+  constructor(
+    private store: Store,
+    public router: Router,
+    private notificationService: NotificationService,
+    private authService: AuthService
+  ) {}
 
   // ngxsOnInit(ctx: StateContext<AuthStateModel>) {
   //   // Pre Fake Login (if you are using ap
@@ -47,33 +57,55 @@ export class AuthState {
   static isAuthenticated(state: AuthStateModel): Boolean {
     return !!state.access_token;
   }
-
   @Selector()
-  static email(state: AuthStateModel): string {
-    return state.email;
+  static _id(state: AuthStateModel): String {
+    return state._id;
   }
-
+  
   @Selector()
   static token(state: AuthStateModel): String | Number {
     return state.token;
   }
+  
 
   @Action(Register)
   register(ctx: StateContext<AuthStateModel>, action: Register) {
     // Register Logic Here
-    return this.authService.signUpUrl(action.payload).pipe(tap((res:any)=>{
-      const state = ctx.getState();
-      ctx.setState({
-        ...state, email:res?.email
+    return this.authService.signUp(action.payload).pipe(
+      tap((res: any) => {
+        const state = ctx.getState();
+        ctx.setState({
+          ...state,
+          _id: res?._id,
+          token: res?.token,
+          access_token: res?.access_token
+        });
+        // Redirect to home after signup
+        this.router.navigate(["/theme/paris"]);
       })
-
-    }))
+      
+    );
   }
 
   @Action(Login)
   login(ctx: StateContext<AuthStateModel>, action: Login) {
     // Login Logic Here
-    this.store.dispatch(new GetUserDetails());
+    // this.store.dispatch(new GetUserDetails());
+    // Register Logic Here
+    return this.authService.login(action.payload).pipe(
+      tap((res: any) => {
+        const state = ctx.getState();
+        ctx.setState({
+          ...state,
+          _id: res?._id,
+          token: res?.token,
+          access_token: res?.access_token
+        });
+        // Redirect to home after login
+        this.router.navigate(["/theme/paris"]);
+      })
+      
+    );
   }
 
   @Action(ForgotPassWord)
@@ -93,17 +125,36 @@ export class AuthState {
 
   @Action(Logout)
   logout(ctx: StateContext<AuthStateModel>) {
-    // Logout LOgic Here
-  }
+    return this.authService.logout().pipe(
+      tap(() => {
+        // Clear authentication state from the store
+        ctx.setState({
+          _id:'',
+          token: '',
+          access_token: null
+        });
 
+        // Optionally dispatch AuthClear action for other state cleanup
+        ctx.dispatch(new AuthClear());
+
+        // Redirect to login page after logout
+        this.router.navigate(["/auth/login"]);
+      })
+    );
+  }
   @Action(AuthClear)
-  authClear(ctx: StateContext<AuthStateModel>){
+  authClear(ctx: StateContext<AuthStateModel>) {
     ctx.patchState({
-      email: '',
-      token: '',
+      _id:"",
+      token: "",
       access_token: null,
     });
     this.store.dispatch(new AccountClear());
   }
 
+  // ✅ Refresh Access Token
+  @Action(RefreshToken)
+  refreshToken(ctx: StateContext<AuthStateModel>, action: RefreshToken) {
+    ctx.patchState({ access_token: action.accessToken });
+  }
 }

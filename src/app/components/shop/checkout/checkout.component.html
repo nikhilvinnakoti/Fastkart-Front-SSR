@@ -20,7 +20,7 @@
                   </div>
                   <div class="checkout-detail">
                     <app-address-block
-                      [addresses]="(user$ | async)?.address"
+                      [addresses]="(user$ | async)?.addresses"
                       [type]="'shipping'"
                       (selectAddress)="selectShippingAddress($event)">
                     </app-address-block>
@@ -41,7 +41,7 @@
                   </div>
                   <div class="checkout-detail">
                     <app-address-block
-                      [addresses]="(user$ | async)?.address"
+                      [addresses]="(user$ | async)?.addresses"
                       [type]="'billing'"
                       (selectAddress)="selectBillingAddress($event)">
                     </app-address-block>
@@ -256,3 +256,8 @@
   </div>
 </section>
 <address-modal #addressModal></address-modal>
+
+
+
+
+  

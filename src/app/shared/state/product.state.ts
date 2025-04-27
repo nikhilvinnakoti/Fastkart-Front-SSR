@@ -71,20 +71,23 @@ export class ProductState {
     this.productService.skeletonLoader = true;
     // Note :- You must need to call api for filter and pagination as of now we are using json data so currently get all data from json 
     //          you must need apply this logic on server side
-    return this.productService.getProducts(action.payload).pipe(
+    return this.productService.getProducts().pipe(
       tap({
         next: (result: ProductModel) => {
           let products = result.data || [];
           if(action?.payload) {
             // Note:- For Internal filter purpose only, once you apply filter logic on server side then you can remove  it as per your requirement.
             // Note:- we have covered only few filters as demo purpose
+            console.log("result", result);
+            console.log("action", action?.payload);
             products = result?.data?.filter(product => 
               (action?.payload?.['store_slug'] && product?.store?.slug == action?.payload?.['store_slug']) ||
               (
-                action?.payload?.['category'] && product?.categories.length &&
+                action?.payload?.['category'] && product?.categories?.length &&
                 product?.categories?.some(category => action?.payload?.['category']?.split(',')?.includes(category.slug))
               )
             )
+            
 
             products = products && products.length ? products : result.data;
 
@@ -182,7 +185,7 @@ export class ProductState {
   @Action(GetRelatedProducts)
   getRelatedProducts(ctx: StateContext<ProductStateModel>, action: GetProducts) {
     this.themeOptionService.preloader = true;
-    return this.productService.getProducts(action.payload).pipe(
+    return this.productService.getProducts().pipe(
       tap({
         next: (result: ProductModel) => {
           const state = ctx.getState();
@@ -207,7 +210,7 @@ export class ProductState {
 
   @Action(GetStoreProducts)
   getStoreProducts(ctx: StateContext<ProductStateModel>, action: GetProducts) {
-    return this.productService.getProducts(action.payload).pipe(
+    return this.productService.getProducts().pipe(
       tap({
         next: (result: ProductModel) => {
           const state = ctx.getState();
@@ -263,7 +266,7 @@ export class ProductState {
 
   @Action(GetDealProducts)
   getDealProducts(ctx: StateContext<ProductStateModel>, action: GetDealProducts) {
-    return this.productService.getProducts(action.payload).pipe(
+    return this.productService.getProducts().pipe(
       tap({
         next: (result: ProductModel) => {
           const state = ctx.getState();

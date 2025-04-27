@@ -40,7 +40,8 @@ export class CategoriesComponent {
   constructor(private route: ActivatedRoute,
     private router: Router, @Inject(PLATFORM_ID) platformID: object) {
     this.isBrowser = isPlatformBrowser(platformID);
-    this.category$.subscribe(res => this.categories = res?.data?.filter(category => category.type == 'product'));
+    // this.category$.subscribe(res => this.categories = res?.data?.filter(category => category.type == 'product'));
+    this.category$.subscribe(res => this.categories = res?.data);
     this.route.queryParams.subscribe(params => {
       this.selectedCategorySlug = params['category'] ? params['category'].split(',') : [];
     });
@@ -56,21 +57,29 @@ export class CategoriesComponent {
     this.selectedCategory.emit(id);
   }
 
-  redirectToCollection(slug: string) {
-    let index = this.selectedCategorySlug.indexOf(slug);
-    if(index === -1)
-      this.selectedCategorySlug.push(slug);
-    else
-      this.selectedCategorySlug.splice(index,1);
+  // redirectToCollection(slug: string) {
+  //   let index = this.selectedCategorySlug.indexOf(slug);
+  //   if(index === -1)
+  //     this.selectedCategorySlug.push(slug);
+  //   else
+  //     this.selectedCategorySlug.splice(index,1);
 
+  //   this.router.navigate(['/collections'], {
+  //     relativeTo: this.route,
+  //     queryParams: this.selectedCategorySlug.length ? { category: this.selectedCategorySlug.join(',') } : {},
+  //    // preserve the existing query params in the route
+  //     skipLocationChange: false  // do trigger navigation
+  //   });
+  // }
+  redirectToCollection(slug: string) {
+    this.selectedCategorySlug = [slug]; // Only keep the latest selected category
+  
     this.router.navigate(['/collections'], {
       relativeTo: this.route,
-      queryParams: {
-        category: this.selectedCategorySlug.length ? this.selectedCategorySlug.join(',') : null
-      },
-      queryParamsHandling: 'merge', // preserve the existing query params in the route
-      skipLocationChange: false  // do trigger navigation
+      queryParams: { category: slug }, // Replace previous categories with only the latest one
+      skipLocationChange: false
     });
   }
+  
 
 }
