@@ -3,7 +3,7 @@
 # =========================
 # Setup logging
 # =========================
-LOG_FILE="/tmp/stop-script.log"
+LOG_FILE="/home/ec2-user/stop-script.log"
 
 # Create a function to log with timestamps
 log() {
@@ -55,5 +55,6 @@ then
     pm2 delete serve:ssr || true
     log "PM2 stop and delete commands issued."
 else
-    log "PM2 not found. Skipping
+    log "PM2 not found. Skipping....."
+fi
 
