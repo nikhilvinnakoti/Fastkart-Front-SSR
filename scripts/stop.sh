@@ -3,7 +3,7 @@
 # =========================
 # Setup logging
 # =========================
-LOG_FILE="/home/ec2-user/stop-script.log"
+LOG_FILE="/home/ec2-user/logs/stop-script.log"
 
 # Create a function to log with timestamps
 log() {
