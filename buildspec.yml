@@ -10,8 +10,11 @@ phases:
       - npm install
   build:
     commands:
+      - echo Making scripts executable...
+      - chmod +x scripts/*.sh
       - echo Building Angular SSR app...
       - npm run build:ssr
+
 artifacts:
   files:
     - dist/**
