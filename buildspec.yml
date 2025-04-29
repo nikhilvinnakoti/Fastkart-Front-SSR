@@ -21,6 +21,7 @@ artifacts:
     - dist/**/*  # Include everything inside the dist/ folder (ensure it's created after the build)
     - scripts/**/*  # Include all scripts from the scripts folder
     - appspec.yml  # Include the appspec.yml file for deployment
+    - package.json
   discard-paths: no  # Keep the folder structure when deploying
 
 
