@@ -7,18 +7,20 @@ phases:
     commands:
       - echo Installing Angular CLI...
       - npm install -g @angular/cli
-      - npm install
+      - npm install  # Installing project dependencies
+
   build:
     commands:
       - echo Making scripts executable...
-      - chmod +x scripts/*.sh
+      - chmod +x scripts/*.sh  # Ensure that the shell scripts have execute permissions
       - echo Building Angular SSR app...
-      - npm run build:ssr
+      - npm run build:ssr  # This will build both the SSR browser and server parts
 
 artifacts:
   files:
-    - dist/**
-    - scripts/**
-    - appspec.yml
-  discard-paths: no
+    - dist/**/*  # Include everything inside the dist/ folder (ensure it's created after the build)
+    - scripts/**/*  # Include all scripts from the scripts folder
+    - appspec.yml  # Include the appspec.yml file for deployment
+  discard-paths: no  # Keep the folder structure when deploying
+
 
