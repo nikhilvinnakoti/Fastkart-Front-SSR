@@ -5,14 +5,17 @@ phases:
     runtime-versions:
       nodejs: 18
     commands:
+      - echo Installing Angular CLI...
       - npm install -g @angular/cli
+      - npm install
   build:
     commands:
-      - npm install
-      - ng build --configuration production
+      - echo Building Angular SSR app...
+      - npm run build:ssr
 artifacts:
   files:
-    - dist/**/*
-    - scripts/*
+    - dist/**
+    - scripts/**
     - appspec.yml
   discard-paths: no
+
