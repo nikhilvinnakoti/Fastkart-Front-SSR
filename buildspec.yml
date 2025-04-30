@@ -21,6 +21,9 @@ artifacts:
   files:
     - '**/*'  # Include all files in dist folder
   discard-paths: no  # Preserve the folder structure
+
+cache: {}
+
   # Specify the destination folder as per the appspec.yml
   
 
