@@ -70,7 +70,7 @@
         "server": {
           "builder": "@angular-devkit/build-angular:server",
           "options": {
-            "outputPath": "dist/fastkart-frontend:server",
+            "outputPath": "dist/fastkart-frontend-server",
             "main": "src/main.server.ts",
             "tsConfig": "tsconfig.json"
           }
