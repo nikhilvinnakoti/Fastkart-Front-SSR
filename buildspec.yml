@@ -17,11 +17,9 @@ phases:
       - npm run build:ssr  # This will build both the SSR browser and server parts
 
 artifacts:
+  base-directory: dist/fastkart-frontend  # 👈 anchor here
   files:
-    - dist/**/*  # Include everything inside the dist/ folder (ensure it's created after the build)
-    - scripts/**/*  # Include all scripts from the scripts folder
-    - appspec.yml  # Include the appspec.yml file for deployment
-    - package.json
+    - '**/*'
   discard-paths: no  # Keep the folder structure when deploying
 
 
