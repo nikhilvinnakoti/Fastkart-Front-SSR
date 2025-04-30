@@ -16,10 +16,12 @@ phases:
       - echo Building Angular SSR app...
       - npm run build:ssr  # This will build both the SSR browser and server parts
 
-artifacts:
-  base-directory: dist/fastkart-frontend  # 👈 anchor here
+  artifacts:
   files:
     - '**/*'
-  discard-paths: no  # Keep the folder structure when deploying
+  base-directory: dist/fastkart-frontend
+  discard-paths: no
+
+  
 
 
