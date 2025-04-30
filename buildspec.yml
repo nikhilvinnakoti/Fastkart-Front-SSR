@@ -18,13 +18,15 @@ phases:
 
 artifacts:
   files:
-    - '**/*'  # Include all files in dist folder
-  discard-paths: no  # Preserve the folder structure
+    - '**/*'             # Include all built files
+    - '!package-lock.json'  # Exclude package-lock.json to prevent deployment overwrite
+  discard-paths: no       # Preserve folder structure
 
 post_build:
   commands:
     - echo Copying built files to the deployment folder...
-    - cp -R dist/fastkart-frontend/* /home/ec2-user/fastkart/frontend  # Copy files from dist/fastkart-frontend to EC2 destination
+    - rm -rf /home/ec2-user/fastkart/frontend/*  # Optional: clear old files to avoid conflicts
+    - cp -R dist/fastkart-frontend/* /home/ec2-user/fastkart/frontend  # Deploy only built files
 
   
 
