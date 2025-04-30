@@ -5,22 +5,25 @@ phases:
     runtime-versions:
       nodejs: 18
     commands:
+      - cd fastkart/frontend  # Change directory to frontend
       - echo Installing Angular CLI...
       - npm install -g @angular/cli
       - npm install  # Installing project dependencies
+      - echo Making shell scripts executable...
+      - chmod +x scripts/*.sh  # Ensure all shell scripts in the scripts directory are executable
 
   build:
     commands:
-      - echo Making scripts executable...
-      - chmod +x scripts/*.sh  # Ensure that the shell scripts have execute permissions
       - echo Building Angular SSR app...
-      - npm run build:ssr  # This will build both the SSR browser and server parts
+      - npm run build:ssr  # Build SSR app (both browser and server parts)
 
 artifacts:
   files:
-    - '**/*'
-  base-directory: dist/fastkart-frontend
-  discard-paths: no
+    - '**/*'  # Include all files in dist folder
+  discard-paths: no  # Preserve the folder structure
+  # Specify the destination folder as per the appspec.yml
+  
+
 
 
   
