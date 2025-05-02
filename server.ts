@@ -3,13 +3,13 @@ import { CommonEngine } from '@angular/ssr';
 import express from 'express';
 import { fileURLToPath } from 'url';
 import { dirname, join, resolve } from 'path';
-import bootstrap from './main.server.js'; // Adjust this if needed
+import bootstrap from './src/main.server'; // Adjust this if needed
 
 export function app() {
   const server = express();
   const serverDistFolder = dirname(fileURLToPath(import.meta.url)); // dist/fastkart-frontend/server
   const browserDistFolder = resolve(serverDistFolder, '../browser'); // dist/fastkart-frontend/browser
-  const indexHtml = join(browserDistFolder, 'index.html'); // SSR uses this as the document
+  const indexHtml = join(browserDistFolder, 'index.server.html'); // SSR uses this as the document
 
   const commonEngine = new CommonEngine();
 
