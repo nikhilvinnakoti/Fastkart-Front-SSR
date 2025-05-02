@@ -5,33 +5,28 @@ phases:
     runtime-versions:
       nodejs: 18
     commands:
-      - echo "Installing backend dependencies..."
-      - cd server
-      - npm install
-      - cd ..
-      - echo "Making scripts executable..."
-      - chmod +x ../scripts/*.sh || echo "No scripts to chmod"
+      - echo Installing Angular CLI...
+      - npm install -g @angular/cli
+      - npm install  # Installing project dependencies
+      - echo Making shell scripts executable...
+      - chmod +x scripts/*.sh  # Ensure all shell scripts in the scripts directory are executable
 
   build:
     commands:
-      - echo "No build step required for backend, skipping..."
-
-  post_build:
-    commands:
-      - echo "Copying backend files to deployment folder..."
-      - if [ -d /home/ec2-user/fastkart/backend ]; then rm -rf /home/ec2-user/fastkart/backend/*; fi
-      - mkdir -p /home/ec2-user/fastkart/backend
-      - cp -R server/* /home/ec2-user/fastkart/backend/
-      - echo "Files copied successfully."
+      - echo Building Angular SSR app...
+      - npm run build:ssr  # Build SSR app (both browser and server parts)
 
 artifacts:
-  base-directory: .
   files:
-    - server/**/*  # Copy everything from the server directory
-    - scripts/*.sh  # Copy all the shell scripts from the scripts directory
-    - '!server/package-lock.json'  # Exclude the package-lock.json to prevent issues
-  discard-paths: no
+    - '**/*'             # Include all built files
+    - '!package-lock.json'  # Exclude package-lock.json to prevent deployment overwrite
+  discard-paths: no       # Preserve folder structure
 
+post_build:
+  commands:
+    - echo Copying built files to the deployment folder...
+    - rm -rf /home/ec2-user/fastkart/frontend/*  # Optional: clear old files to avoid conflicts
+    - cp -R dist/fastkart-frontend/* /home/ec2-user/fastkart/frontend  # Deploy only built files
 
 
 
