@@ -5,30 +5,32 @@ phases:
     runtime-versions:
       nodejs: 18
     commands:
-      - echo Installing backend dependencies...
+      - echo "Installing backend dependencies..."
       - cd server
       - npm install
       - cd ..
-      - echo Making root-level scripts executable...
-      - chmod +x scripts/*.sh || echo "No scripts to chmod"
+      - echo "Making scripts executable..."
+      - chmod +x ./scripts/*.sh || echo "No scripts to chmod"
 
   build:
     commands:
-      - echo No build step required for backend...
+      - echo "No build step required for backend, skipping..."
 
   post_build:
     commands:
-      - echo Copying backend files to /home/ec2-user/fastkart/backend...
-      - rm -rf /home/ec2-user/fastkart/backend/*
+      - echo "Copying backend files to deployment folder..."
+      - if [ -d /home/ec2-user/fastkart/backend ]; then rm -rf /home/ec2-user/fastkart/backend/*; fi
+      - mkdir -p /home/ec2-user/fastkart/backend
       - cp -R server/* /home/ec2-user/fastkart/backend/
-      - echo Backend files copied successfully
+      - echo "Files copied successfully."
 
 artifacts:
   base-directory: server
   files:
     - '**/*'
-    - '!**/package-lock.json'
+    - '!package-lock.json'
   discard-paths: no
+
 
 
   
