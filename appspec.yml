@@ -2,32 +2,29 @@ version: 0.0
 os: linux
 
 files:
-  - source: server/
-    destination: /home/ec2-user/fastkart/backend
-    overwrite: true
-
-  - source: scripts/
-    destination: /home/ec2-user/fastkart/backend/scripts
-    overwrite: true
+  - source: /
+    destination: /home/ec2-user/fastkart/frontend
+    overwrite: true  # Ensures files are overwritten during deployment
 
 hooks:
   ApplicationStop:
-    - location: scripts/stop_server.sh
-      timeout: 600
+    - location: scripts/stop.sh
+      timeout: 600   # 10 minutes (increase if stopping application takes time)
       runas: ec2-user
 
   BeforeInstall:
-    - location: scripts/cleanup.sh
-      timeout: 600
+    - location: scripts/install.sh
+      timeout: 600   # 10 minutes (increase if installing dependencies takes time)
       runas: ec2-user
 
-    - location: scripts/install.sh
-      timeout: 600
+    # Cleanup script to delete old files if needed before installing new ones
+    - location: scripts/cleanup.sh
+      timeout: 600   # 10 minutes
       runas: ec2-user
 
   ApplicationStart:
-    - location: scripts/start_server.sh
-      timeout: 600
+    - location: scripts/start.sh
+      timeout: 600   # 10 minutes (increase if starting the app takes time)
       runas: ec2-user
 
 
