@@ -5,7 +5,7 @@
 export const environment = {
   production: false,
   baseURL: 'http://localhost:4200/',
-  URL: 'assets/data'
+  URL: 'http://localhost:4200/assets/data'
 };
 
 /*
